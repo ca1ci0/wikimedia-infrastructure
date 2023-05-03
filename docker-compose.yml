@@ -82,6 +82,7 @@ services:
       compatibility.override_main_response_version: "true"
     ports:
       - 9200:9200
+      - 9300:9300
       - 9600:9600 # required for Performance Analyzer
 
   # console at http://localhost:5601/app/dev_tools#/console
@@ -92,6 +93,37 @@ services:
     environment:
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
+
+#  applications
+  wikimedia-producer:
+    network_mode: host
+    build:
+      context: ../wikimedia-producer
+      dockerfile: Dockerfile
+    environment:
+      KAFKA_BOOTSTRAP_SERVER: localhost:9092
+    restart: always
+    depends_on:
+      - kafka1
+      - zoo1
+    volumes:
+      - ./wikimedia-producer-data:/app/data
+  wikimedia-consumer:
+    network_mode: host
+    build:
+      context: ../wikimedia-consumer
+      dockerfile: Dockerfile
+    environment:
+      KAFKA_BOOTSTRAP_SERVER: localhost:9092
+      OPENSEARCH_SERVER: localhost:9200
+    restart: always
+    depends_on:
+      - kafka1
+      - zoo1
+      - opensearch
+      - opensearch-dashboards
+    volumes:
+      - ./wikimedia-consumer-data:/app/data
 
 volumes:
   conduktor_data: {}
