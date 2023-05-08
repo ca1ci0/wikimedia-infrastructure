@@ -12,6 +12,8 @@ services:
     networks:
       wikimedia_network:
     restart: always
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -33,6 +35,8 @@ services:
       wikimedia_network:
         ipv4_address: 172.16.238.30
     restart: always
+    volumes:
+      - kafka-data:/var/lib/kafka
 
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:latest
@@ -47,6 +51,8 @@ services:
     networks:
       - wikimedia_network
     restart: always
+    volumes:
+      - schema-registry-data:/var/lib/schema-registry
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:latest
@@ -65,8 +71,11 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
     networks:
-      - wikimedia_network
+      wikimedia_network:
+        ipv4_address: 172.16.238.13
     restart: always
+    volumes:
+      - control-center-data:/var/lib/control-center
 
   #opensearch related stuff
   opensearch:
@@ -82,6 +91,8 @@ services:
     networks:
       wikimedia_network:
     restart: always
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
 
   # console at http://localhost:5601/app/dev_tools#/console
   opensearch-dashboards:
@@ -93,7 +104,10 @@ services:
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
     networks:
       wikimedia_network:
+        ipv4_address: 172.16.238.12
     restart: always
+    volumes:
+      - dashboards-data:/usr/share/opensearch-dashboards/data
 
 #  applications
   wikimedia-producer:
@@ -135,3 +149,11 @@ networks:
       driver: default
       config:
         - subnet: 172.16.238.0/24
+
+volumes:
+  zookeeper-data:
+  kafka-data:
+  schema-registry-data:
+  control-center-data:
+  opensearch-data:
+  dashboards-data:
