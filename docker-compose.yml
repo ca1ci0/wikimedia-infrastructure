@@ -81,6 +81,7 @@ services:
       - 9600:9600 # required for Performance Analyzer
     networks:
       wikimedia_network:
+    restart: always
 
   # console at http://localhost:5601/app/dev_tools#/console
   opensearch-dashboards:
@@ -92,6 +93,7 @@ services:
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
     networks:
       wikimedia_network:
+    restart: always
 
 #  applications
   wikimedia-producer:
