@@ -107,20 +107,22 @@ services:
     volumes:
       - dashboards-data:/usr/share/opensearch-dashboards/data
 
-#  applications
+  #  applications
   wikimedia-producer:
-    network_mode: host
     build:
       context: ../wikimedia-producer
       dockerfile: Dockerfile
     environment:
-      KAFKA_BOOTSTRAP_SERVER: 172.16.238.30:9092
+      KAFKA_BOOTSTRAP_SERVER: kafka:9092
     restart: always
     depends_on:
       - kafka
       - zookeeper
     volumes:
       - ./wikimedia-producer-data:/app/data
+    networks:
+      wikimedia-network:
+        ipv4_address: 172.16.238.10
 
   wikimedia-consumer:
     build:
