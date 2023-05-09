@@ -10,14 +10,14 @@ services:
     ports:
       - "2181:2181"
     networks:
-      wikimedia_network:
+      - wikimedia-network
     restart: always
     volumes:
       - zookeeper-data:/var/lib/zookeeper
 
   kafka:
     image: confluentinc/cp-kafka:latest
-    hostname: kafka1
+    hostname: kafka_host
     container_name: kafka
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -25,14 +25,14 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: 'true'
       KAFKA_CONFLUENT_SUPPORT_METRICS_REPORTER_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: 'kafka1:9092'
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: 'kafka_host:9092'
       KAFKA_INTERCEPTOR_CLASSES: 'io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor,io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor'
     ports:
       - "9092:9092"
     depends_on:
       - zookeeper
     networks:
-      wikimedia_network:
+      wikimedia-network:
         ipv4_address: 172.16.238.30
     restart: always
     volumes:
@@ -41,7 +41,7 @@ services:
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:latest
     environment:
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka1:9092
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka_host:9092
       SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
     depends_on:
       - zookeeper
@@ -49,7 +49,7 @@ services:
     ports:
       - "8081:8081"
     networks:
-      - wikimedia_network
+      - wikimedia-network
     restart: always
     volumes:
       - schema-registry-data:/var/lib/schema-registry
@@ -63,7 +63,7 @@ services:
     ports:
       - "9021:9021"
     environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka1:9092'
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka_host:9092'
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
       CONTROL_CENTER_REPLICATION_FACTOR: 1
@@ -71,7 +71,7 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
     networks:
-      wikimedia_network:
+      wikimedia-network:
         ipv4_address: 172.16.238.13
     restart: always
     volumes:
@@ -89,7 +89,7 @@ services:
       - 9300:9300
       - 9600:9600 # required for Performance Analyzer
     networks:
-      wikimedia_network:
+      - wikimedia-network
     restart: always
     volumes:
       - opensearch-data:/usr/share/opensearch/data
@@ -103,7 +103,7 @@ services:
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
     networks:
-      wikimedia_network:
+      wikimedia-network:
         ipv4_address: 172.16.238.12
     restart: always
     volumes:
@@ -139,11 +139,11 @@ services:
     volumes:
       - ./wikimedia-consumer-data:/app/data
     networks:
-      wikimedia_network:
+      wikimedia-network:
         ipv4_address: 172.16.238.11
 
 networks:
-  wikimedia_network:
+  wikimedia-network:
     driver: bridge
     ipam:
       driver: default
