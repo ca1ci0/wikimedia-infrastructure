@@ -142,6 +142,22 @@ services:
       wikimedia-network:
         ipv4_address: 172.16.238.11
 
+#  wikimedia-stream-processor:
+#    build:
+#      context: ../wikimedia-stream-processor
+#      dockerfile: Dockerfile
+#    environment:
+#      KAFKA_BOOTSTRAP_SERVER: kafka:9092
+#    depends_on:
+#      - kafka
+#      - zookeeper
+#      - wikimedia-producer
+#    volumes:
+#      - wikimedia-stream-processor-data:/app/data
+#    networks:
+#      wikimedia-network:
+#        ipv4_address: 172.16.238.14
+
 networks:
   wikimedia-network:
     driver: bridge
@@ -159,3 +175,4 @@ volumes:
   dashboards-data:
   wikimedia-producer-data:
   wikimedia-consumer-data:
+#  wikimedia-stream-processor-data:
