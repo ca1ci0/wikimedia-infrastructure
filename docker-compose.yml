@@ -114,7 +114,7 @@ services:
       context: ../wikimedia-producer
       dockerfile: Dockerfile
     environment:
-      KAFKA_BOOTSTRAP_SERVER: localhost:9092
+      KAFKA_BOOTSTRAP_SERVER: 172.16.238.30:9092
     restart: always
     depends_on:
       - kafka
@@ -127,7 +127,7 @@ services:
       context: ../wikimedia-consumer
       dockerfile: Dockerfile
     environment:
-      KAFKA_BOOTSTRAP_SERVER: 172.16.238.30:9092
+      KAFKA_BOOTSTRAP_SERVER: kafka:9092
       OPENSEARCH_SERVER: opensearch:9200
     restart: always
     depends_on:
