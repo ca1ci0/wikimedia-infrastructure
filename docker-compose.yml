@@ -107,6 +107,21 @@ services:
     volumes:
       - dashboards-data:/usr/share/opensearch-dashboards/data
 
+  grafana:
+    image: grafana/grafana:latest-ubuntu
+    depends_on:
+      - kafka
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_INSTALL_PLUGINS: hamedkarbasi93-kafka-datasource
+    networks:
+      wikimedia-network:
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
   #  applications
   wikimedia-producer:
     build:
@@ -173,6 +188,7 @@ volumes:
   control-center-data:
   opensearch-data:
   dashboards-data:
+  grafana-storage:
   wikimedia-producer-data:
   wikimedia-consumer-data:
 #  wikimedia-stream-processor-data:
