@@ -105,7 +105,7 @@ services:
         ipv4_address: 172.16.238.12
     restart: always
     volumes:
-      - dashboards-data:/usr/share/opensearch-dashboards/data
+      - opensearch-dashboards-data:/usr/share/opensearch-dashboards/data
 
   grafana:
     image: grafana/grafana:latest-ubuntu
@@ -187,7 +187,7 @@ volumes:
   schema-registry-data:
   control-center-data:
   opensearch-data:
-  dashboards-data:
+  opensearch-dashboards-data:
   grafana-storage:
   wikimedia-producer-data:
   wikimedia-consumer-data:
