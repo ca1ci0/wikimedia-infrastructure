@@ -111,6 +111,7 @@ services:
     image: grafana/grafana:9.5.2
     depends_on:
       - kafka
+      - opensearch
     ports:
       - "3000:3000"
     environment:
