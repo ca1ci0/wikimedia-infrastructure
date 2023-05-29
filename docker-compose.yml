@@ -108,7 +108,7 @@ services:
       - opensearch-dashboards-data:/usr/share/opensearch-dashboards/data
 
   grafana:
-    image: grafana/grafana:9.5.2
+    image: grafana/grafana:9.5.2-ubuntu
     depends_on:
       - kafka
       - opensearch
@@ -117,28 +117,28 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_INSTALL_PLUGINS: hamedkarbasi93-kafka-datasource,yesoreyeram-infinity-datasource
+#      GF_INSTALL_PLUGINS: hamedkarbasi93-kafka-datasource,yesoreyeram-infinity-datasource
     networks:
       wikimedia-network:
     volumes:
       - grafana-storage:/var/lib/grafana
 
   #  applications
-  wikimedia-producer:
-    build:
-      context: ../wikimedia-producer
-      dockerfile: Dockerfile
-    environment:
-      KAFKA_BOOTSTRAP_SERVER: kafka:9092
-    restart: always
-    depends_on:
-      - kafka
-      - zookeeper
-    volumes:
-      - wikimedia-producer-data:/app/data
-    networks:
-      wikimedia-network:
-        ipv4_address: 172.16.238.10
+#  wikimedia-producer:
+#    build:
+#      context: ../wikimedia-producer
+#      dockerfile: Dockerfile
+#    environment:
+#      KAFKA_BOOTSTRAP_SERVER: kafka:9092
+#    restart: always
+#    depends_on:
+#      - kafka
+#      - zookeeper
+#    volumes:
+#      - wikimedia-producer-data:/app/data
+#    networks:
+#      wikimedia-network:
+#        ipv4_address: 172.16.238.10
 
   wikimedia-consumer:
     build:
@@ -192,6 +192,6 @@ volumes:
   opensearch-data:
   opensearch-dashboards-data:
   grafana-storage:
-  wikimedia-producer-data:
+#  wikimedia-producer-data:
   wikimedia-consumer-data:
 #  wikimedia-stream-processor-data:
